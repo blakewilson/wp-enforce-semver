@@ -1,8 +1,7 @@
 <?php
 /**
  * Plugin Name: Semantic Versioning
- * Plugin URI: https://blake.id
- * Description: A plugin to warn and protect against auto updates for WordPress plugins that use Semantic Versioning
+ * Description: Easily manage WordPress plugins that use Semantic Versioning.
  * Version: 1.0.0
  * Author: Blake Wilson
  * Author URI: https://blake.id
