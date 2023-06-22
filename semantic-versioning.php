@@ -10,6 +10,8 @@
  * License URI: https://opensource.org/licenses/MIT
  * Text Domain: semantic-versioning
  * Semantic Versioning: true
+ *
+ * @package semantic-versioning
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,34 +23,67 @@ define( 'SEMANTIC_VERSIONING_PLUGIN_HEADER', 'Semantic Versioning' );
 require_once 'vendor/autoload.php';
 
 use PHLAK\SemVer;
-use PHPHtmlParser\Dom;
 
 /**
  * Adds the Semantic Versioning header to plugins.
+ *
+ * @param string[] $headers The plugin headers.
+ *
+ * @see https://justintadlock.com/archives/2011/06/16/customizing-plugin-and-theme-file-headers
  */
 function add_semver_plugin_header( $headers ) {
-	if ( ! in_array( SEMANTIC_VERSIONING_PLUGIN_HEADER, $headers ) ) {
+	if ( ! in_array( SEMANTIC_VERSIONING_PLUGIN_HEADER, $headers, true ) ) {
 		$headers[] = SEMANTIC_VERSIONING_PLUGIN_HEADER;
 	}
 
 	return $headers;
 }
-
 add_filter( 'extra_plugin_headers', 'add_semver_plugin_header' );
 
-function has_breaking_changes( $new_version, $current_version ) {
+/**
+ * Detects if the "new version" has a major change compared to the "current version".
+ *
+ * @param string $new_version The new version of the plugin.
+ * @param string $current_version The current version of the plugin.
+ *
+ * @return boolean
+ */
+function does_new_version_have_major_change( $new_version, $current_version ) {
 	$_current_version = SemVer\Version::parse( $current_version );
 	$_new_version     = SemVer\Version::parse( $new_version );
 
 	return $_new_version->major > $_current_version->major;
 }
 
+/**
+ * Disables auto updates from occurring for plugins that have the
+ * Semantic Versioning header and who's new version has a major change compared
+ * to the current version.
+ *
+ * @see https://developer.wordpress.org/reference/hooks/auto_update_type/
+ *
+ * @param bool|null $update Whether to update the given plugin.
+ * @param object    $item The plugin object.
+ */
 function disable_auto_updates_for_major_versions( $update, $item ) {
-	if ( ! isset( $update[ SEMANTIC_VERSIONING_PLUGIN_HEADER ] ) ) {
+	// If the plugin header is not set, return the unchanged $update value.
+	if ( empty( $item->{SEMANTIC_VERSIONING_PLUGIN_HEADER} ) ) {
 		return $update;
 	}
 
-	if ( $update[ SEMANTIC_VERSIONING_PLUGIN_HEADER ] === 'true' && has_breaking_changes( $update['new_version'], $update['Version'] ) ) {
+	if ( empty( $item->new_version ) ) {
+		return $update;
+	}
+
+	/**
+	 * If the plugin header is set to the correct value and there is
+	 * a major change, change the $update value to be false so auto updates don't occur.
+	 *
+	 * Otherwise, return the unchanged $update value.
+	 */
+	if (
+			'true' === $item->{SEMANTIC_VERSIONING_PLUGIN_HEADER} &&
+			does_new_version_have_major_change( $item->new_version, $item->Version ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		return false;
 	} else {
 		return $update;
@@ -56,30 +91,38 @@ function disable_auto_updates_for_major_versions( $update, $item ) {
 }
 add_filter( 'auto_update_plugin', 'disable_auto_updates_for_major_versions', 10, 2 );
 
+/**
+ * Get all the plugins that are using Semantic Versioning and who's new version
+ * is a major release.
+ *
+ * @see https://developer.wordpress.org/reference/functions/get_plugin_updates/
+ */
 function get_major_version_updates() {
 	if ( ! function_exists( 'get_plugin_updates' ) ) {
 		include_once ABSPATH . 'wp-admin/includes/update.php';
 	}
 
-	// https://developer.wordpress.org/reference/functions/get_plugin_updates/
-	$plugin_updates = array_filter(
+	$major_version_updates = array_filter(
 		get_plugin_updates(),
 		function( $plugin ) {
-			return $plugin->{SEMANTIC_VERSIONING_PLUGIN_HEADER} === 'true' && has_breaking_changes( $plugin->update->new_version, $plugin->Version );
+			return 'true' === $plugin->{SEMANTIC_VERSIONING_PLUGIN_HEADER} &&
+				does_new_version_have_major_change( $plugin->update->new_version, $plugin->Version ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		}
 	);
 
-	return $plugin_updates;
+	return $major_version_updates;
 }
 
+/**
+ * Show the plugins with major releases incoming, the breaking change notice.
+ */
 function plugins_list_show_breaking_changes_message() {
-	$plugin_updates = get_major_version_updates();
+	$major_version_updates    = get_major_version_updates();
+	$major_updates_file_names = array_keys( $major_version_updates );
 
-	$plugin_update_filenames = array_keys( $plugin_updates );
-
-	foreach ( $plugin_update_filenames as $plugin_filename ) {
+	foreach ( $major_updates_file_names as $plugin_file_name ) {
 		$action_name  = 'in_plugin_update_message-';
-		$action_name .= $plugin_filename;
+		$action_name .= $plugin_file_name;
 
 		add_action(
 			$action_name,
@@ -91,52 +134,37 @@ function plugins_list_show_breaking_changes_message() {
 		);
 	}
 }
-
 add_action( 'plugins_loaded', 'plugins_list_show_breaking_changes_message' );
 
-function modify_plugin_auto_update_setting_html_defaults( $html, $plugin_file, $plugin_data ) {
-	$major_semver_updates = get_major_version_updates();
-
-	$plugin_file_names = array_keys( $major_semver_updates );
-
-	if ( in_array( $plugin_file, $plugin_file_names ) ) {
-		$dom = new Dom();
-		$dom->loadStr( $html );
-		$auto_update_time_class = $dom->find( '.auto-update-time' )[0];
-
-		$auto_update_text = 'This major version update <b>will not</b> be auto updated.';
-		apply_filters( 'semver_auto_update_text', $auto_update_text, $plugin_file, $plugin_data );
-
-		$auto_update_time_class->firstChild()->setText( $auto_update_text );
-
-		return $dom;
-	}
-
-	return $html;
-}
-
-add_filter( 'plugin_auto_update_setting_html', 'modify_plugin_auto_update_setting_html_defaults', 10, 3 );
-
-
-function uses_semver_link( $links_array, $plugin_file_name, $plugin_data, $status ) {
+/**
+ * Displays a "uses Semantic Versioning" message in the plugin meta row of
+ * plugins that use the Semantic Versioning header.
+ *
+ * @see https://developer.wordpress.org/reference/hooks/plugin_row_meta/
+ *
+ * @param string[] $plugin_meta An array of the plugin's metadata, including the version, author, author URI, and plugin URI.
+ * @param string   $plugin_file_name Path to the plugin file relative to the plugins directory.
+ * @param array    $plugin_data An array of plugin data.
+ * @param string   $status Status filter currently applied to the plugin list.
+ */
+function uses_semver_link( $plugin_meta, $plugin_file_name, $plugin_data, $status ) {
 	$semver_plugins = array_filter(
 		get_plugins(),
 		function( $plugin ) {
-			return $plugin[ SEMANTIC_VERSIONING_PLUGIN_HEADER ] === 'true';
+			return 'true' === $plugin[ SEMANTIC_VERSIONING_PLUGIN_HEADER ];
 		}
 	);
 
 	$semver_plugin_filenames = array_keys( $semver_plugins );
 
-	if ( in_array( $plugin_file_name, $semver_plugin_filenames ) ) {
-		if ( str_contains( $links_array[0], 'Version' ) ) {
-			$links_array[0] = $links_array[0] . ' (uses Semantic Versioning)';
+	if ( in_array( $plugin_file_name, $semver_plugin_filenames, true ) ) {
+		if ( str_contains( $plugin_meta[0], 'Version' ) ) {
+			$plugin_meta[0] = $plugin_meta[0] . ' (uses Semantic Versioning)';
 		} else {
-			$links_array[] = 'Uses Semantic Versioning';
+			$plugin_meta[] = 'Uses Semantic Versioning';
 		}
 	}
 
-	return $links_array;
+	return $plugin_meta;
 }
-
 add_filter( 'plugin_row_meta', 'uses_semver_link', 10, 4 );
