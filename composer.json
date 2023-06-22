@@ -1,0 +1,18 @@
+{
+    "name": "blakewilson/semantic-versioning",
+    "description": "TBD",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Blake Wilson",
+            "email": "blake@blake.id"
+        }
+    ],
+    "require": {
+        "phlak/semver": "^4.1",
+        "paquettg/php-html-parser": "^3.1"
+    },
+    "config": {
+        "platform-check": false
+    }
+}
