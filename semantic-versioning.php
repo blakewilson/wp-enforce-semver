@@ -124,10 +124,14 @@ function plugins_list_show_breaking_changes_message() {
 		$action_name  = 'in_plugin_update_message-';
 		$action_name .= $plugin_file_name;
 
+		$notice_text = __( '<br><br><b>THIS UPDATE MAY CONTAIN BREAKING CHANGES:</b> This plugin uses Semantic Versioning, and this new version is a major release. Please review the changelog before updating. <a href="https://semver.org" target="_blank">Learn more</a>', 'semantic-versioning' );
+
 		add_action(
 			$action_name,
-			function( $data, $response ) {
-				printf( '<br><br><b>THIS UPDATE MAY CONTAIN BREAKING CHANGES:</b> This plugin uses semantic versioning, and this new version is a major release. Please review the changelog before updating. <a href="https://semver.org">Learn more</a>' );
+			function( $data, $response ) use ($notice_text, $plugin_file_name) {
+				$notice_text = apply_filters('semantic_versioning_notice_text', $notice_text, $plugin_file_name, $data, $response);
+
+				printf( $notice_text );
 			},
 			10,
 			2
@@ -159,7 +163,7 @@ function uses_semver_link( $plugin_meta, $plugin_file_name, $plugin_data, $statu
 
 	if ( in_array( $plugin_file_name, $semver_plugin_filenames, true ) ) {
 		if ( str_contains( $plugin_meta[0], 'Version' ) ) {
-			$plugin_meta[0] = $plugin_meta[0] . ' (uses Semantic Versioning)';
+			$plugin_meta[0] = $plugin_meta[0] . ' (Uses Semantic Versioning)';
 		} else {
 			$plugin_meta[] = 'Uses Semantic Versioning';
 		}
