@@ -124,7 +124,6 @@ function plugins_list_show_breaking_changes_message() {
 		$action_name .= $plugin_file_name;
 
 		$notice_text = __( '<br><br><b>THIS UPDATE MAY CONTAIN BREAKING CHANGES:</b> This plugin uses Semantic Versioning, and this new version is a major release. Please review the changelog before updating. <a href="https://semver.org" target="_blank">Learn more</a>', 'semantic-versioning' );
-		
 
 		add_action(
 			$action_name,
