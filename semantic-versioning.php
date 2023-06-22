@@ -81,7 +81,7 @@ function disable_auto_updates_for_major_versions( $update, $item ) {
 	 * Otherwise, return the unchanged $update value.
 	 */
 	if (
-			'true' === $item->{SEMANTIC_VERSIONING_PLUGIN_HEADER} &&
+			'true' === strtolower($item->{SEMANTIC_VERSIONING_PLUGIN_HEADER}) &&
 			does_new_version_have_major_change( $item->new_version, $item->Version ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		return false;
 	} else {
@@ -104,7 +104,7 @@ function get_major_version_updates() {
 	$major_version_updates = array_filter(
 		get_plugin_updates(),
 		function( $plugin ) {
-			return 'true' === $plugin->{SEMANTIC_VERSIONING_PLUGIN_HEADER} &&
+			return 'true' === strtolower($plugin->{SEMANTIC_VERSIONING_PLUGIN_HEADER}) &&
 				does_new_version_have_major_change( $plugin->update->new_version, $plugin->Version ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		}
 	);
@@ -155,7 +155,7 @@ function uses_semver_link( $plugin_meta, $plugin_file_name, $plugin_data, $statu
 	$semver_plugins = array_filter(
 		get_plugins(),
 		function( $plugin ) {
-			return 'true' === $plugin[ SEMANTIC_VERSIONING_PLUGIN_HEADER ];
+			return 'true' === strtolower($plugin[ SEMANTIC_VERSIONING_PLUGIN_HEADER ]);
 		}
 	);
 
