@@ -12,7 +12,16 @@
         "phlak/semver": "^4.1",
         "paquettg/php-html-parser": "^3.1"
     },
+    "scripts": {
+        "phpcs": "phpcs",
+        "phpcs:fix": "phpcbf"
+    },
     "config": {
         "platform-check": false
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^2.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1"
     }
 }
