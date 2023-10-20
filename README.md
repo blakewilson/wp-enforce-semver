@@ -1,4 +1,4 @@
-# Semantic Versioning for WP
+# Enforce Semver in Your WordPress Plugin
 
 ![Screenshot of plugins list with Semantic Versioning for WordPress enabled](https://github.com/blakewilson/semantic-versioning-plugin/blob/main/.wordpress-org/screenshot-1.png?raw=true)
 
