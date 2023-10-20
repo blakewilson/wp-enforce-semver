@@ -1,6 +1,6 @@
 {
-    "name": "blakewilson/semantic-versioning",
-    "description": "TBD",
+    "name": "blakewilson/wp-enforce-semver",
+    "description": "A class to enforce SemVer in your WordPress plugins.",
     "license": "MIT",
     "authors": [
         {

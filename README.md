@@ -11,7 +11,7 @@ By using this class, auto updates will be disabled when the plugin's new version
 1. Install the class as a dependency via composer:
 
 ```
-composer install blakewilson/enforce-semver
+composer install blakewilson/wp-enforce-semver
 ```
 
 2. Initialize the class in your plugin:
