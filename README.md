@@ -1,6 +1,6 @@
 # Enforce SemVer in Your WordPress Plugin
 
-![Screenshot of plugins list with Semantic Versioning for WordPress enabled](https://github.com/blakewilson/semantic-versioning-plugin/blob/main/.wordpress-org/screenshot-1.png?raw=true)
+![Screenshot of plugins list with Semantic Versioning for WordPress enabled](https://github.com/blakewilson/wp-enforce-semver/blob/main/.assets/screenshot-1.png?raw=true)
 
 Easily enforce [SemVer](https://semver.org) in your WordPress plugins.
 
@@ -17,14 +17,19 @@ composer install blakewilson/wp-enforce-semver
 2. Initialize the class in your plugin:
 
 ```php
-use EnforceSemVer;
+// Init autoloader from Composer
+if ( file_exists( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' ) ) {
+	require plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
+}
+
+use EnforceSemVer\EnforceSemVer;
 
 new EnforceSemVer('my-plugin/my-plugin.php');
 ```
 
 And that's it! Once your end-users install your plugin, they will be protected against auto updates for major releases, and see a helpful message in the plugins list next to your plugin update:
 
-![Screenshot of plugins list with Semantic Versioning for WordPress enabled](https://github.com/blakewilson/semantic-versioning-plugin/blob/main/.wordpress-org/screenshot-1.png?raw=true)
+![Screenshot of plugins list with Semantic Versioning for WordPress enabled](https://github.com/blakewilson/wp-enforce-semver/blob/main/.assets/screenshot-1.png?raw=true)
 
 Additionally, this notice text can be modified via a filter:
 

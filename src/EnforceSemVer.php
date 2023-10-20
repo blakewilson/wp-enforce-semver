@@ -6,6 +6,8 @@
  * @package EnforceSemVerClass
  */
 
+namespace EnforceSemVer;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
