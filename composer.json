@@ -15,9 +15,11 @@
         "phpcs": "phpcs",
         "phpcs:fix": "phpcbf"
     },
-    "config": {
-        "platform-check": false
-    },
+    "autoload": {
+		"psr-4": {
+			"EnforceSemVer\\": "src/"
+		}
+	},
     "require-dev": {
         "wp-coding-standards/wpcs": "^2.3",
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
