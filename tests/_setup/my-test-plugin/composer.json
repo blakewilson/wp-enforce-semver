@@ -1,0 +1,17 @@
+{
+    "name": "blakewilson/my-test-plugin",
+    "autoload": {
+        "psr-4": {
+            "Blakewilson\\MyTestPlugin\\": "."
+        }
+    },
+    "require": {
+      "blakewilson/wp-enforce-semver": "@dev"
+    },
+    "repositories": [
+      {
+        "type": "path",
+        "url": "../../../"
+      }
+    ]
+}
