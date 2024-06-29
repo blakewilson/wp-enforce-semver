@@ -4,7 +4,8 @@
   "description": "![Screenshot of plugins list with Semantic Versioning for WordPress enabled](https://github.com/blakewilson/wp-enforce-semver/blob/main/.assets/screenshot-1.png?raw=true)",
   "main": "index.js",
   "scripts": {
-    "wp-env": "wp-env"
+    "wp-env": "wp-env",
+    "test": "playwright"
   },
   "keywords": [],
   "author": "",

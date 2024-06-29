@@ -13,3 +13,27 @@ Version: 1.0.0
 // use EnforceSemVer\EnforceSemVer;
 // 
 // new EnforceSemVer('my-test-plugin/my-test-plugin.php');
+
+
+add_filter('site_transient_update_plugins', 'mock_plugin_update');
+
+function mock_plugin_update($transient) {
+    if (empty($transient->checked)) {
+        return $transient;
+    }
+
+    $plugin_file = 'my-test-plugin/my-test-plugin.php';
+
+    $new_version = '2.0.0';
+
+    $update_data = (object) [
+        'slug'        => 'my-test-plugin',
+        'new_version' => $new_version,
+        'url'         => 'https://example.com/my-custom-plugin-changelog', // URL to the plugin changelog
+        'package'     => 'https://example.com/my-custom-plugin-v2.0.0.zip', // URL to the new version zip file
+    ];
+
+    $transient->response[$plugin_file] = $update_data;
+
+    return $transient;
+}
