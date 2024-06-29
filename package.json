@@ -1,0 +1,14 @@
+{
+  "name": "wp-enforce-semver",
+  "version": "1.0.0",
+  "description": "![Screenshot of plugins list with Semantic Versioning for WordPress enabled](https://github.com/blakewilson/wp-enforce-semver/blob/main/.assets/screenshot-1.png?raw=true)",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.45.0",
+    "@types/node": "^20.14.9"
+  }
+}
