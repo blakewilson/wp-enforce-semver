@@ -1,0 +1,5 @@
+{
+  "plugins": [
+    "./tests/_setup/my-test-plugin"
+  ]
+}
