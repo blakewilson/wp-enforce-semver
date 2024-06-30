@@ -35,7 +35,7 @@ class EnforceSemVer {
 		$this->plugin_filename = $plugin_filename;
 
 		add_filter( 'auto_update_plugin', array( $this, 'disable_auto_updates_for_major_versions' ), 10, 2 );
-		add_action( 'plugins_loaded', array( $this, 'plugins_list_show_breaking_changes_message' ), 20 );
+		add_action( 'admin_init', array( $this, 'plugins_list_show_breaking_changes_message' ), 20 );
 	}
 
 	/**
