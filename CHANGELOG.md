@@ -1,5 +1,9 @@
 # wp-enforce-semver
 
+## Unreleased
+
+- BREAKING: `plugins_list_show_breaking_changes_message` is now fired on the `admin_init` action instead of the `plugins_loaded` action to avoid running outside of the admin interface
+
 ## 2.0.2
 
 - Set priority to `20` in the `plugins_list_show_breaking_changes_message` callback (#4). Thanks @mindctrl!
