@@ -1,6 +1,8 @@
 {
   "plugins": [
-    "./tests/_setup/my-test-plugin",
-    "./tests/_setup/alter-breaking-change-text"
-  ]
+    "./tests/_setup/my-test-plugin"
+  ],
+  "mappings": {
+    "wp-content/plugins/alter-breaking-change-text": "./tests/_setup/alter-breaking-change-text"
+  }
 }
