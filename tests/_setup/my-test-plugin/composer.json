@@ -11,11 +11,7 @@
     "repositories": [
       {
         "type": "path",
-        "url": "../../../",
-        "symLink": false,
-        "options": {
-          "symLink": false
-        }
+        "url": "../../../"
       }
     ]
 }
