@@ -17,6 +17,5 @@ setup('authenticate', async ({ page }) => {
   await expect(page.getByRole('menuitem', { name: 'Howdy, admin' })).toBeVisible();
 
   // End of authentication steps.
-
   await page.context().storageState({ path: authFile });
 });
