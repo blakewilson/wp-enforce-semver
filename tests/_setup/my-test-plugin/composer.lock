@@ -1,0 +1,124 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "199c7efe6c408db1b0e05db18c1ff4ad",
+    "packages": [
+        {
+            "name": "blakewilson/wp-enforce-semver",
+            "version": "dev-add-e2e-tests",
+            "dist": {
+                "type": "path",
+                "url": "../../..",
+                "reference": "3cfd4b82a236d947a52dbddf2ab3c598f0a483d8"
+            },
+            "require": {
+                "phlak/semver": "^4.1"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "phpcompatibility/phpcompatibility-wp": "^2.1",
+                "wp-coding-standards/wpcs": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EnforceSemVer\\": "src/"
+                }
+            },
+            "scripts": {
+                "phpcs": [
+                    "phpcs"
+                ],
+                "phpcs:fix": [
+                    "phpcbf"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Blake Wilson",
+                    "email": "blake@blake.id"
+                }
+            ],
+            "description": "A class to enforce SemVer in your WordPress plugins.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "phlak/semver",
+            "version": "4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHLAK/SemVer.git",
+                "reference": "decdb385f26f2f8da2748289534fa3e61347917e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHLAK/SemVer/zipball/decdb385f26f2f8da2748289534fa3e61347917e",
+                "reference": "decdb385f26f2f8da2748289534fa3e61347917e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phlak/coding-standards": "^2.0",
+                "psy/psysh": "^0.11.1",
+                "vimeo/psalm": "^4.3",
+                "yoast/phpunit-polyfills": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Support/helpers.php"
+                ],
+                "psr-4": {
+                    "PHLAK\\SemVer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Kankiewicz",
+                    "email": "Chris@ChrisKankiewicz.com"
+                }
+            ],
+            "description": "Semantic versioning helper library",
+            "support": {
+                "issues": "https://github.com/PHLAK/SemVer/issues",
+                "source": "https://github.com/PHLAK/SemVer/tree/4.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/PHLAK",
+                    "type": "github"
+                },
+                {
+                    "url": "https://paypal.me/ChrisKankiewicz",
+                    "type": "paypal"
+                }
+            ],
+            "time": "2022-12-23T20:28:04+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "blakewilson/wp-enforce-semver": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
+}
