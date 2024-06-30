@@ -13,12 +13,28 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+    - uses: php-actions/composer@v6
     - name: Install dependencies
       run: npm ci
+    - name: Install composer dependencies
+      run: composer install
+
+    # We use mirror repo paths here because it copies the files instead of symlink.
+    # Symlinks were proving difficult with wp-env/docker.
+    # TODO: Properly setup symlinks in docker container with local package in composer.
+    - name: Install composer dependencies (test plugin)
+      run: COMPOSER_MIRROR_PATH_REPOS=1 composer install
+      working-directory: ./tests/_setup/my-test-plugin
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
+    - name: Setup Tests
+      run: npm run test:start
+
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npm run test
+
     - uses: actions/upload-artifact@v4
       if: always()
       with:
