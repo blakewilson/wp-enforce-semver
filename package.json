@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "wp-env": "wp-env",
-    "test": "playwright"
+    "test:start": "npm run wp-env -- start",
+    "test:clean": "npm run wp-env -- clean",
+    "test:destroy": "npm run wp-env -- destroy",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
   },
   "keywords": [],
   "author": "",

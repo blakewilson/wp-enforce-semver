@@ -52,5 +52,6 @@ test('BREAKING CHANGE: plugin shows breaking change custom message', async ({ pa
 })
 
 test('plugin does not alter plugin list row with non breaking change', async () => {
-  exec('npm run wp-env -- run cli "wp option add test_plugin_version 1.0.5"')
+  // Todo
+  expect(true).toBeFalsy()
 })
