@@ -6,16 +6,13 @@ Version: 1.0.0
 */
 
 // Init autoloader from Composer
-// if ( file_exists( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' ) ) {
-// 	require plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
-// }
-// 
-// use EnforceSemVer\EnforceSemVer;
-// 
-// new EnforceSemVer('my-test-plugin/my-test-plugin.php');
+if ( file_exists( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' ) ) {
+	require plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
+}
 
+use EnforceSemVer\EnforceSemVer;
 
-add_filter('site_transient_update_plugins', 'mock_plugin_update');
+new EnforceSemVer('my-test-plugin/my-test-plugin.php');
 
 function mock_plugin_update($transient) {
     if (empty($transient->checked)) {
@@ -37,3 +34,5 @@ function mock_plugin_update($transient) {
 
     return $transient;
 }
+
+add_filter('site_transient_update_plugins', 'mock_plugin_update');

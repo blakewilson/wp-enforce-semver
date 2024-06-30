@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../..",
-                "reference": "3007bbce5aa4778dfb029e35624d3c76a54a894e"
+                "reference": "3cfd4b82a236d947a52dbddf2ab3c598f0a483d8"
             },
             "require": {
                 "phlak/semver": "^4.1"
