@@ -1,6 +1,6 @@
 # wp-enforce-semver
 
-## Unreleased
+## 3.0.0 
 
 - BREAKING: `plugins_list_show_breaking_changes_message` is now fired on the `admin_init` action instead of the `plugins_loaded` action to avoid running outside of the admin interface
 
