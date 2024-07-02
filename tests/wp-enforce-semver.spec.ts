@@ -73,3 +73,19 @@ test('plugin does not alter plugin list row with non breaking change', async ({ 
   // Cleanup  
   exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
 })
+
+test('plugin does not alter plugin list row with no update', async ({ page }) => {
+  // My test plugin version is 1.0.0 so no update should be detected.
+  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "1.0.0"')
+
+  await page.goto('http://localhost:8888/wp-admin/plugins.php');
+
+  let pluginRow = page.locator('tr.active[data-plugin="my-test-plugin/my-test-plugin.php"]')
+
+  await expect(pluginRow).toContainText('Enable auto-updates')
+  await expect(pluginRow).toContainText('Version 1.0.0')
+  await expect(pluginRow).toContainText('My Test Plugin')
+
+  // Cleanup
+  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
+})
