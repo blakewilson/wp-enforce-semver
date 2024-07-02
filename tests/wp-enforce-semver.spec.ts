@@ -1,4 +1,12 @@
 import { test, expect } from '@playwright/test';
+import { exec } from 'child_process';
+import exp from 'constants';
+
+let DEFAULT_BREAKING_CHANGE_TEXT = 'THIS UPDATE MAY CONTAIN BREAKING CHANGES: This plugin uses Semantic Versioning, and this new version is a major release. Please review the changelog before updating. Learn more' 
+
+test.beforeAll(async () => {
+  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
+})
 
 test('test env is running', async ({ page }) => {
   await page.goto('http://localhost:8888')
@@ -19,7 +27,7 @@ test('BREAKING CHANGE: message is properly displayed in plugins list', async ({ 
 
   let pluginUpdateRow = page.locator('#my-test-plugin-update .update-message')
 
-  await expect(pluginUpdateRow).toContainText('THIS UPDATE MAY CONTAIN BREAKING CHANGES: This plugin uses Semantic Versioning, and this new version is a major release. Please review the changelog before updating. Learn more')
+  await expect(pluginUpdateRow).toContainText(DEFAULT_BREAKING_CHANGE_TEXT)
 })
 
 test('BREAKING CHANGE: auto updates are properly disabled in plugins list', async ({ page }) => {
@@ -50,7 +58,19 @@ test('BREAKING CHANGE: plugin shows breaking change custom message', async ({ pa
   await expect(customBreakingChangePluginInactiveRow).toBeVisible();
 })
 
-// test('plugin does not alter plugin list row with non breaking change', async () => {
-//   // Todo
-//   expect(true).toBeFalsy()
-// })
+test('plugin does not alter plugin list row with non breaking change', async ({ page }) => {
+  // My test plugin version is 1.0.0 so 1.1.0 is non-breaking
+  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "1.1.0"')
+
+  await page.goto('http://localhost:8888/wp-admin/plugins.php');
+
+  let pluginRow = page.locator('tr.update[data-plugin="my-test-plugin/my-test-plugin.php"]')
+  let pluginUpdateRow = page.locator('#my-test-plugin-update .update-message')
+
+  await expect(pluginRow).toContainText('Enable auto-updates')
+  await expect(pluginUpdateRow).not.toContainText(DEFAULT_BREAKING_CHANGE_TEXT)
+  await expect(pluginUpdateRow).toContainText('View version 1.1.0 details')
+
+  // Cleanup  
+  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
+})
