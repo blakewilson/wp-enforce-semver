@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import { exec } from 'child_process';
-import exp from 'constants';
 
 let DEFAULT_BREAKING_CHANGE_TEXT = 'THIS UPDATE MAY CONTAIN BREAKING CHANGES: This plugin uses Semantic Versioning, and this new version is a major release. Please review the changelog before updating. Learn more' 
 

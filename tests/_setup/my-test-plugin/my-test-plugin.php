@@ -29,7 +29,9 @@ function mock_plugin_update($transient) {
         'package'     => 'https://example.com/my-custom-plugin-v2.0.0.zip', // URL to the new version zip file
     ];
     
-    $transient->response[$plugin_file] = $update_data;
+    if($new_version !== '1.0.0') {
+      $transient->response[$plugin_file] = $update_data;
+    }
 
     return $transient;
 }
