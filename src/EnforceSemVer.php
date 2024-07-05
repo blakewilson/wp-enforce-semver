@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.Files.FileName.NotHyphenatedLowercase
 /**
  * Class to setup the enforcement of semantic versioning in a WordPress plugin.
  *
@@ -34,8 +34,11 @@ class EnforceSemVer {
 	public function __construct( string $plugin_filename ) {
 		$this->plugin_filename = $plugin_filename;
 
+		$plugin_update_message_action_name  = 'in_plugin_update_message-';
+		$plugin_update_message_action_name .= $this->plugin_filename;
+
 		add_filter( 'auto_update_plugin', array( $this, 'disable_auto_updates_for_major_versions' ), 10, 2 );
-		add_action( 'admin_init', array( $this, 'plugins_list_show_breaking_changes_message' ), 20 );
+		add_action( $plugin_update_message_action_name, array( $this, 'plugins_list_show_breaking_changes_message' ), 20, 2 );
 	}
 
 	/**
@@ -68,52 +71,22 @@ class EnforceSemVer {
 	}
 
 	/**
-	 * Check if the plugin has a major version update.
-	 *
-	 * @see https://developer.wordpress.org/reference/functions/get_plugin_updates/
-	 */
-	private function has_major_update() {
-		if ( ! function_exists( 'get_plugin_updates' ) ) {
-			include_once ABSPATH . 'wp-admin/includes/update.php';
-		}
-
-		$updates = get_plugin_updates();
-
-		if ( ! isset( $updates[ $this->plugin_filename ] ) ) {
-			return false;
-		}
-
-		$plugin_update = $updates[ $this->plugin_filename ];
-
-		if ( ! $this->does_new_version_have_major_change( $plugin_update->update->new_version, $plugin_update->Version ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Show the breaking changes notice on the plugin's update.
+	 *
+	 * @see https://developer.wordpress.org/reference/hooks/in_plugin_update_message-file/
+	 * @param array  $plugin_data An array of plugin metadata.
+	 * @param object $response An object of metadata about the available plugin update.
 	 */
-	public function plugins_list_show_breaking_changes_message() {
-		$has_major_update = $this->has_major_update();
-
-		$action_name  = 'in_plugin_update_message-';
-		$action_name .= $this->plugin_filename;
+	public function plugins_list_show_breaking_changes_message( $plugin_data, $response ) {
+		// Only print the message if there is a major change.
+		if ( ! $this->does_new_version_have_major_change( $response->new_version, $plugin_data['Version'] ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			return;
+		}
 
 		$notice_text = __( '<br><br><b>THIS UPDATE MAY CONTAIN BREAKING CHANGES:</b> This plugin uses Semantic Versioning, and this new version is a major release. Please review the changelog before updating. <a href="https://semver.org" target="_blank">Learn more</a>', 'semantic-versioning' );
 		$notice_text = apply_filters( 'semantic_versioning_notice_text', $notice_text, $this->plugin_filename );
 
-		if ( $has_major_update ) {
-			add_action(
-				$action_name,
-				function( $data, $response ) use ( $notice_text ) {
-					printf( wp_kses_post( $notice_text ) );
-				},
-				10,
-				2
-			);
-		}
+		printf( wp_kses_post( $notice_text ) );
 	}
 
 	/**
