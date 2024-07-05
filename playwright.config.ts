@@ -14,7 +14,7 @@ export default defineConfig({
   testDir: './tests',
   testIgnore: "**/_setup/**",
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -37,10 +37,10 @@ export default defineConfig({
     { name: 'setup', testMatch: /.*\.setup\.ts/ },
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         // Use prepared auth state.
-        storageState: 'playwright/.auth/user.json', 
+        storageState: 'playwright/.auth/user.json',
       },
       dependencies: ['setup']
     },
@@ -50,7 +50,7 @@ export default defineConfig({
     //   use: {
     //     ...devices['Desktop Firefox'],
     //     // Use prepared auth state.
-    //     storageState: 'playwright/.auth/user.json', 
+    //     storageState: 'playwright/.auth/user.json',
     //   },
     //   dependencies: ['setup']
     // },
@@ -60,7 +60,7 @@ export default defineConfig({
     //   use: {
     //     ...devices['Desktop Safari'],
     //     // Use prepared auth state.
-    //     storageState: 'playwright/.auth/user.json', 
+    //     storageState: 'playwright/.auth/user.json',
     //   },
     //   dependencies: ['setup']
     // },
