@@ -1,6 +1,10 @@
 # wp-enforce-semver
 
-## 3.0.0 
+## Unreleased
+
+- Calls the `in_plugin_update_message-{$file}` action more reliably
+
+## 3.0.0
 
 - BREAKING: `plugins_list_show_breaking_changes_message` is now fired on the `admin_init` action instead of the `plugins_loaded` action to avoid running outside of the admin interface
 
