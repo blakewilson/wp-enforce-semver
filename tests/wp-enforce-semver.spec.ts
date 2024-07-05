@@ -3,8 +3,8 @@ import { exec } from 'child_process';
 
 let DEFAULT_BREAKING_CHANGE_TEXT = 'THIS UPDATE MAY CONTAIN BREAKING CHANGES: This plugin uses Semantic Versioning, and this new version is a major release. Please review the changelog before updating. Learn more' 
 
-test.beforeAll(async () => {
-  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
+test.beforeEach(async () => {
+  exec('npm run wp-env -- run cli wp transient delete my_test_plugin_version')
 })
 
 test('test env is running', async ({ page }) => {
@@ -13,15 +13,21 @@ test('test env is running', async ({ page }) => {
   expect(true).toBe(true)
 })
 
-test('has test plugin installed', async ({ page }) => {
+test('has test plugin installed and activated', async ({ page }) => {
   await page.goto('http://localhost:8888/wp-admin/plugins.php');
 
-  let pluginRow = page.locator('tr.update[data-plugin="my-test-plugin/my-test-plugin.php"]')
+  let pluginRow = page.locator('tr.active[data-plugin="my-test-plugin/my-test-plugin.php"]')
 
   await expect(pluginRow).toContainText('My Test Plugin')
 });
 
 test('BREAKING CHANGE: message is properly displayed in plugins list', async ({ page }) => {
+  // Set the version to a "breaking" version
+  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version 2.0.0')
+
+  // Delete the update plugins transient to bust the cache
+  exec('npm run wp-env -- run cli wp transient delete update_plugins --network')
+  
   await page.goto('http://localhost:8888/wp-admin/plugins.php');
 
   let pluginUpdateRow = page.locator('#my-test-plugin-update .update-message')
@@ -30,6 +36,12 @@ test('BREAKING CHANGE: message is properly displayed in plugins list', async ({ 
 })
 
 test('BREAKING CHANGE: auto updates are properly disabled in plugins list', async ({ page }) => {
+  // Set the version to a "breaking" version
+  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
+
+  // Delete the update plugins transient to bust the cache
+  exec('npm run wp-env -- run cli wp transient delete update_plugins --network')
+
   await page.goto('http://localhost:8888/wp-admin/plugins.php');
 
   let pluginRow = page.locator('tr.update[data-plugin="my-test-plugin/my-test-plugin.php"]')
@@ -39,6 +51,12 @@ test('BREAKING CHANGE: auto updates are properly disabled in plugins list', asyn
 })
 
 test('BREAKING CHANGE: plugin shows breaking change custom message', async ({ page }) => {
+  // Set the version to a "breaking" version
+  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
+
+  // Delete the update plugins transient to bust the cache
+  exec('npm run wp-env -- run cli wp transient delete update_plugins --network')
+
   await page.goto('http://localhost:8888/wp-admin/plugins.php');
 
   // Turn on the filter plugin
@@ -52,14 +70,16 @@ test('BREAKING CHANGE: plugin shows breaking change custom message', async ({ pa
   // Cleanup
   let customBreakingChangePluginActiveRow = page.locator('tr.active[data-plugin="alter-breaking-change-text/alter-breaking-change-text.php"]')
   await customBreakingChangePluginActiveRow.getByLabel('Deactivate Alter Breaking Change Text').click();
-  
 
   await expect(customBreakingChangePluginInactiveRow).toBeVisible();
 })
 
 test('plugin does not alter plugin list row with non breaking change', async ({ page }) => {
-  // My test plugin version is 1.0.0 so 1.1.0 is non-breaking
+  // My test plugin default version is 1.0.0 so 1.1.0 is non-breaking
   exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "1.1.0"')
+
+  // Delete the update plugins transient to bust the cache
+  exec('npm run wp-env -- run cli wp transient delete update_plugins --network')
 
   await page.goto('http://localhost:8888/wp-admin/plugins.php');
 
@@ -69,14 +89,11 @@ test('plugin does not alter plugin list row with non breaking change', async ({ 
   await expect(pluginRow).toContainText('Enable auto-updates')
   await expect(pluginUpdateRow).not.toContainText(DEFAULT_BREAKING_CHANGE_TEXT)
   await expect(pluginUpdateRow).toContainText('View version 1.1.0 details')
-
-  // Cleanup  
-  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
 })
 
 test('plugin does not alter plugin list row with no update', async ({ page }) => {
-  // My test plugin version is 1.0.0 so no update should be detected.
-  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "1.0.0"')
+  // Delete the update plugins transient to bust the cache
+  exec('npm run wp-env -- run cli wp transient delete update_plugins --network')
 
   await page.goto('http://localhost:8888/wp-admin/plugins.php');
 
@@ -85,7 +102,4 @@ test('plugin does not alter plugin list row with no update', async ({ page }) =>
   await expect(pluginRow).toContainText('Enable auto-updates')
   await expect(pluginRow).toContainText('Version 1.0.0')
   await expect(pluginRow).toContainText('My Test Plugin')
-
-  // Cleanup
-  exec('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
 })
