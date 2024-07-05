@@ -1,6 +1,6 @@
 # wp-enforce-semver
 
-## Unreleased
+## 3.0.1
 
 - Calls the `in_plugin_update_message-{$file}` action more reliably
 
