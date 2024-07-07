@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "199c7efe6c408db1b0e05db18c1ff4ad",
+    "content-hash": "fd31468231d7827ccdec754420ef2bbd",
     "packages": [
         {
             "name": "blakewilson/wp-enforce-semver",
-            "version": "dev-add-e2e-tests",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
-                "url": "../../..",
-                "reference": "3cfd4b82a236d947a52dbddf2ab3c598f0a483d8"
+                "url": "/var/www/html/app",
+                "reference": "91833c93c4046c2c3fcd2743b0934a6824056e70"
             },
             "require": {
                 "phlak/semver": "^4.1"
@@ -47,7 +47,7 @@
             ],
             "description": "A class to enforce SemVer in your WordPress plugins.",
             "transport-options": {
-                "relative": true
+                "relative": false
             }
         },
         {
@@ -120,5 +120,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.6.0"
 }
