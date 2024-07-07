@@ -25,7 +25,7 @@ test('BREAKING CHANGE: message is properly displayed in plugins list', async ({ 
   const page = await context.newPage();
 
   // Set the version to a "breaking" version
-  execSync('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
+  execSync('npm run test:plugin:set-version 2.0.0')
 
   await page.goto('http://localhost:8888/wp-admin/plugins.php');
 
@@ -36,7 +36,7 @@ test('BREAKING CHANGE: message is properly displayed in plugins list', async ({ 
 
 test('BREAKING CHANGE: auto updates are properly disabled in plugins list', async ({ page }) => {
   // Set the version to a "breaking" version
-  execSync('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
+  execSync('npm run test:plugin:set-version 2.0.0')
 
   await page.goto('http://localhost:8888/wp-admin/plugins.php');
 
@@ -48,7 +48,7 @@ test('BREAKING CHANGE: auto updates are properly disabled in plugins list', asyn
 
 test('BREAKING CHANGE: plugin shows breaking change custom message', async ({ page }) => {
   // Set the version to a "breaking" version
-  execSync('npm run wp-env -- run cli wp transient set my_test_plugin_version "2.0.0"')
+  execSync('npm run test:plugin:set-version 2.0.0')
 
   await page.goto('http://localhost:8888/wp-admin/plugins.php');
 
@@ -69,7 +69,7 @@ test('BREAKING CHANGE: plugin shows breaking change custom message', async ({ pa
 
 test('plugin does not alter plugin list row with non breaking change', async ({ page }) => {
   // My test plugin default version is 1.0.0 so 1.1.0 is non-breaking
-  execSync('npm run wp-env -- run cli wp transient set my_test_plugin_version "1.1.0"')
+  execSync('npm run test:plugin:set-version 1.1.0')
 
   await page.goto('http://localhost:8888/wp-admin/plugins.php');
 
